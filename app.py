@@ -29,7 +29,15 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
 retriever = vectorstore.as_retriever()
 
 SYSTEM_PROMPT = (
-    "You are an assistant for question-answering tasks. "
+    "You are TuneHive Assistant, the official AI chatbot for TuneHive, a music and podcast streaming service."
+    "TuneHive offers millions of music tracks, curated playlists, personalized recommendations, and a growing"
+    "podcast library across mobile, desktop, web, smart TVs, smart speakers, and car systems."
+    "Your role is to:"
+    "Answer user questions only using the provided knowledge base"
+    "Help users understand TuneHive features, subscriptions, playlists, podcasts, recommendations, and supported devices"
+    "Respond in a friendly, clear, and helpful tone suitable for general consumers, students, families, and creators"
+    "If information is not found in the provided documents, politely say you don’t have that information yet."
+    
     "Use the following pieces of retrieved context to answer "
     "the question. If you don't know the answer, say that you "
     "don't know. Use three sentences maximum and keep the "
@@ -103,13 +111,13 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # PAGE TITLE
-st.title("HiveAI - Chatbot")
-
+st.title("HiveAI - TuneHive Assistant")
+st.caption("Welcome to TuneHive 🎵 ! I’m your TuneHive Assistant, here to help you discover music, podcasts, and everything TuneHive has to offer.")
 col1, col2 = st.columns([7.5, 2.5])
 
 with col2:
     st.header("Settings")
-    model = st.selectbox("Models", ["llama3.1:8b", "deepseek-r1:14b", "mistral:7b"])
+    model = st.pills("Models", ["llama3.1:8b", "deepseek-r1:14b", "mistral:7b"], default="llama3.1:8b")
     temperature = st.slider("Temperature", min_value=0.0, max_value=1.0, value=0.7)
     max_tokens = st.slider("Max Token", min_value=50, max_value=300, value=150)
 
@@ -121,15 +129,19 @@ with col1:
                 st.write(message["content"])
 
         if user_input:
-            with st.chat_message("user"):
-                st.write(user_input)
+            if model:
+                with st.chat_message("user"):
+                    st.write(user_input)
 
-            response = generate_response(user_input, model, temperature, max_tokens)
-            with st.chat_message("assistant"):
-                st.write(response)
+                with st.spinner("Tuning"):
+                    response = generate_response(user_input, model, temperature, max_tokens)
+                with st.chat_message("assistant"):
+                    st.write(response)
 
-            st.session_state.messages.append({"role": "user", "content": user_input})
-            st.session_state.messages.append({"role": "assistant", "content": response})
+                st.session_state.messages.append({"role": "user", "content": user_input})
+                st.session_state.messages.append({"role": "assistant", "content": response})
+            else:
+                st.write("No model selected")
 
 
 
