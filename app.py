@@ -29,7 +29,7 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
 retriever = vectorstore.as_retriever()
 
 SYSTEM_PROMPT = (
-    "You are TuneHive Assistant, the official AI chatbot for TuneHive, a music and podcast streaming service."
+    "You are HiveAI, a TuneHive Assistant, the official AI chatbot for TuneHive, a music and podcast streaming service."
     "TuneHive offers millions of music tracks, curated playlists, personalized recommendations, and a growing"
     "podcast library across mobile, desktop, web, smart TVs, smart speakers, and car systems."
     "Your role is to:"
