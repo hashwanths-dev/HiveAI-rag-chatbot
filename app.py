@@ -25,7 +25,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 splits = text_splitter.split_documents(docs)
 embeddings = OllamaEmbeddings(model="embeddinggemma:300m")
-vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
+vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings, persist_directory=None)
 retriever = vectorstore.as_retriever()
 
 SYSTEM_PROMPT = (
